@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "title": "The Daily Reflection Tree",
+    "version": "1.0",
+    "description": "A deterministic reflection agent for end-of-day self-awareness. Three axes: Locus (agency), Orientation (contribution), Radius (concern for others).",
+    "axes": ["Axis 1: Locus (Internal vs External)", "Axis 2: Orientation (Contribution vs Entitlement)", "Axis 3: Radius (Self-centric vs Altrocentric)"],
+    "sources": ["Rotter (1954, 1966) - Locus of Control", "Dweck (2006) - Growth Mindset", "Campbell et al. (2004) - Psychological Entitlement", "Organ (1988) - Organizational Citizenship", "Maslow (1969) - Self-Transcendence", "Batson (2011) - Perspective-Taking"]
+  },
+  "nodes": [
+    {
+      "id": "START",
+      "parentId": null,
+      "type": "start",
+      "text": "Good evening. Before you wind down, let's take 5 minutes to reflect on your day.",
+      "options": [],
+      "target": "A1_OPEN",
+      "signal": null
+    },
+    {
+      "id": "A1_OPEN",
+      "parentId": "START",
+      "type": "question",
+      "text": "How would you sum up today in one word?",
+      "options": ["Overwhelming", "Productive", "Mixed", "Frustrating"],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_D1",
+      "parentId": "A1_OPEN",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=Productive:A1_Q_AGENCY_HIGH",
+        "answer=Mixed:A1_Q_AGENCY_MID",
+        "answer=Overwhelming|Frustrating:A1_Q_AGENCY_LOW"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_Q_AGENCY_HIGH",
+      "parentId": "A1_D1",
+      "type": "question",
+      "text": "You said today felt {A1_OPEN.answer}. When something went well, what was the main factor?",
+      "options": ["I was well-prepared", "My team delivered", "I adapted quickly to change", "Timing and luck aligned"],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_Q_AGENCY_MID",
+      "parentId": "A1_D1",
+      "type": "question",
+      "text": "You said today felt {A1_OPEN.answer}. Looking back, what's one thing you directly influenced?",
+      "options": ["How I responded to setbacks", "What I asked for help with", "A conversation I initiated", "Something I didn't control—things just happened"],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_Q_AGENCY_LOW",
+      "parentId": "A1_D1",
+      "type": "question",
+      "text": "You said today felt {A1_OPEN.answer}. When things got difficult, what was your first move?",
+      "options": ["I figured out what I could control", "I vented or waited for clarity", "I pushed harder alone", "I felt stuck—not sure what to do"],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_SIGNAL_INT_HIGH",
+      "parentId": "A1_Q_AGENCY_HIGH",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=I was well-prepared|I adapted quickly to change:A1_R_INT_HIGH",
+        "answer=My team delivered|Timing and luck aligned:A1_R_INT_MID"
+      ],
+      "target": null,
+      "signal": "axis1:internal"
+    },
+    {
+      "id": "A1_R_INT_HIGH",
+      "parentId": "A1_SIGNAL_INT_HIGH",
+      "type": "reflection",
+      "text": "That's agency. You see the thread between what you did—prepared, adapted—and what happened. Not everything was in your control, but you were in the game.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:internal"
+    },
+    {
+      "id": "A1_R_INT_MID",
+      "parentId": "A1_SIGNAL_INT_HIGH",
+      "type": "reflection",
+      "text": "You recognize both sides: your team's contribution and that things aligned for you today. That balance—seeing what others did and what you benefited from—is rare.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:internal"
+    },
+    {
+      "id": "A1_SIGNAL_MID",
+      "parentId": "A1_Q_AGENCY_MID",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=How I responded to setbacks|A conversation I initiated:A1_R_MID_INT",
+        "answer=What I asked for help with:A1_R_MID_BALANCE",
+        "answer=Something I didn't control—things just happened:A1_R_MID_EXT"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_R_MID_INT",
+      "parentId": "A1_SIGNAL_MID",
+      "type": "reflection",
+      "text": "There it is. You own your reaction. You didn't just take what came—you shaped it, even in a day that felt mixed. That's the seed of agency.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:internal"
+    },
+    {
+      "id": "A1_R_MID_BALANCE",
+      "parentId": "A1_SIGNAL_MID",
+      "type": "reflection",
+      "text": "Asking for help is a form of agency. You didn't pretend to have all the answers—you got what you needed. That's wisdom, not weakness.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:internal"
+    },
+    {
+      "id": "A1_R_MID_EXT",
+      "parentId": "A1_SIGNAL_MID",
+      "type": "reflection",
+      "text": "Some days feel more like drift than drive. But somewhere in that drift, you made a choice—if only how to feel about it. That counts.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:external"
+    },
+    {
+      "id": "A1_SIGNAL_LOW",
+      "parentId": "A1_Q_AGENCY_LOW",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=I figured out what I could control:A1_R_LOW_INT",
+        "answer=I vented or waited for clarity|I pushed harder alone:A1_R_LOW_EXT_ACTION",
+        "answer=I felt stuck—not sure what to do:A1_R_LOW_EXT"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_R_LOW_INT",
+      "parentId": "A1_SIGNAL_LOW",
+      "type": "reflection",
+      "text": "Even when it feels rough, you have a practice: find the boundary between what's yours and what isn't, then move the needle on what's yours. That's grounded thinking.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:internal"
+    },
+    {
+      "id": "A1_R_LOW_EXT_ACTION",
+      "parentId": "A1_SIGNAL_LOW",
+      "type": "reflection",
+      "text": "Venting, pushing—those are ways of coping when things are unclear. The real question for tomorrow: what's one thing you want to control differently?",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:external"
+    },
+    {
+      "id": "A1_R_LOW_EXT",
+      "parentId": "A1_SIGNAL_LOW",
+      "type": "reflection",
+      "text": "Stuck is a real feeling. But stuck isn't permanent. Tomorrow, when confusion hits, try this: name one small thing you can do. Not everything—just one.",
+      "options": [],
+      "target": "BRIDGE_1_2",
+      "signal": "axis1:external"
+    },
+    {
+      "id": "BRIDGE_1_2",
+      "parentId": null,
+      "type": "bridge",
+      "text": "Now let's look at another layer: not just how you handled things, but what you gave today.",
+      "options": [],
+      "target": "A2_OPEN",
+      "signal": null
+    },
+    {
+      "id": "A2_OPEN",
+      "parentId": "BRIDGE_1_2",
+      "type": "question",
+      "text": "Think of a moment from today. Were you mostly focused on what you'd get, or what you could give?",
+      "options": ["I helped or taught someone", "I was focused on recognition or resources", "I was supporting the team without asking for credit", "I felt others weren't pulling their weight"],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A2_SIGNAL",
+      "parentId": "A2_OPEN",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=I helped or taught someone|I was supporting the team without asking for credit:A2_R_CONTRIB",
+        "answer=I was focused on recognition or resources|I felt others weren't pulling their weight:A2_R_ENTITLE"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A2_R_CONTRIB",
+      "parentId": "A2_SIGNAL",
+      "type": "reflection",
+      "text": "That's the posture of contribution. You're not keeping score, not waiting for your turn—you're giving first. Orgs run on that energy.",
+      "options": [],
+      "target": "BRIDGE_2_3",
+      "signal": "axis2:contribution"
+    },
+    {
+      "id": "A2_R_ENTITLE",
+      "parentId": "A2_SIGNAL",
+      "type": "reflection",
+      "text": "When we focus on what we deserve, we stop seeing what we can offer. Notice the frame: less 'What's owed to me?' and more 'What can I add?' Small shift, big difference.",
+      "options": [],
+      "target": "BRIDGE_2_3",
+      "signal": "axis2:entitlement"
+    },
+    {
+      "id": "BRIDGE_2_3",
+      "parentId": null,
+      "type": "bridge",
+      "text": "One last piece: zoom out. Your day wasn't just about you.",
+      "options": [],
+      "target": "A3_OPEN",
+      "signal": null
+    },
+    {
+      "id": "A3_OPEN",
+      "parentId": "BRIDGE_2_3",
+      "type": "question",
+      "text": "When you think about today's biggest challenge or win, who comes to mind?",
+      "options": ["Just me—my own performance or problem", "My team—we were all navigating the same pressures", "A specific person who was struggling", "The customer or mission we're serving"],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A3_SIGNAL",
+      "parentId": "A3_OPEN",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=Just me—my own performance or problem:A3_R_SELF_CENTRIC",
+        "answer=My team—we were all navigating the same pressures:A3_R_TEAM",
+        "answer=A specific person who was struggling|The customer or mission we're serving:A3_R_ALTROCENTRIC"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A3_R_SELF_CENTRIC",
+      "parentId": "A3_SIGNAL",
+      "type": "reflection",
+      "text": "It's natural for your mind to center on your own stakes, your own stress. But try this: is there anyone your day affected? Even indirectly? Noticing that connection is the beginning of perspective.",
+      "options": [],
+      "target": "SUMMARY_CALC",
+      "signal": "axis3:self_centric"
+    },
+    {
+      "id": "A3_R_TEAM",
+      "parentId": "A3_SIGNAL",
+      "type": "reflection",
+      "text": "You're already thinking in we. That's not naive—that's how meaningful work feels. Your struggle is part of something shared.",
+      "options": [],
+      "target": "SUMMARY_CALC",
+      "signal": "axis3:transcendent"
+    },
+    {
+      "id": "A3_R_ALTROCENTRIC",
+      "parentId": "A3_SIGNAL",
+      "type": "reflection",
+      "text": "You're thinking about someone else's experience, not just yours. That kind of perspective—imagining what it felt like for them—is where empathy lives, and where meaning grows.",
+      "options": [],
+      "target": "SUMMARY_CALC",
+      "signal": "axis3:transcendent"
+    },
+    {
+      "id": "SUMMARY_CALC",
+      "parentId": null,
+      "type": "summary",
+      "text": "Today you leaned {axis1.dominant} on agency. You approached contribution with a {axis2.dominant} mindset. And your attention spanned from {axis3.dominant} concerns. That's the shape of your day.",
+      "options": [],
+      "target": "END",
+      "signal": null
+    },
+    {
+      "id": "END",
+      "parentId": "SUMMARY_CALC",
+      "type": "end",
+      "text": "Sleep well. You showed up.",
+      "options": [],
+      "target": null,
+      "signal": null
+    }
+  ]
+}

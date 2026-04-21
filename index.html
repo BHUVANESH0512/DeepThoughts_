@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Reflection Tree — DT Fellowship</title>
+  <meta name="description" content="A deterministic daily reflection tool grounded in psychology. Explore agency, contribution, and perspective in 5 minutes." />
+  <meta property="og:title" content="Daily Reflection Tree" />
+  <meta property="og:description" content="5-minute end-of-day reflection. Three psychological axes. No AI fluff." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🌿</text></svg>" />
+</head>
+<body>
+
+  <!-- Ambient glows -->
+  <div class="ambient ambient-1"></div>
+  <div class="ambient ambient-2"></div>
+
+  <main class="app" role="main">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <header class="header" aria-label="App header">
+      <div class="logo">
+        <div class="logo-icon" aria-hidden="true">🌿</div>
+        <span class="logo-text">Reflection Tree</span>
+      </div>
+      <span class="header-time" id="header-time" aria-label="Current time"></span>
+    </header>
+
+    <!-- ── Progress bar ────────────────────────────────────── -->
+    <div class="progress-bar-wrap" role="progressbar" aria-label="Session progress">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- ── Axis indicators ─────────────────────────────────── -->
+    <div class="axis-indicators" aria-label="Axis indicators">
+      <div class="axis-pill" id="axis-pill-1" title="Locus of Control">
+        <span class="dot"></span>Locus
+      </div>
+      <div class="axis-pill" id="axis-pill-2" title="Orientation">
+        <span class="dot"></span>Orientation
+      </div>
+      <div class="axis-pill" id="axis-pill-3" title="Radius of Concern">
+        <span class="dot"></span>Radius
+      </div>
+    </div>
+
+    <!-- ── Card ────────────────────────────────────────────── -->
+    <div class="card">
+
+      <!-- ── Screen 1: Welcome ──────────────────────────────── -->
+      <section class="screen active" id="welcome-screen" aria-label="Welcome">
+        <p class="welcome-eyebrow">End-of-day · 5 minutes</p>
+        <h1 class="welcome-title">
+          How did you <em>actually</em> show up today?
+        </h1>
+        <p class="welcome-desc">
+          A short, deterministic reflection across three psychological axes.
+          No AI, no judgement—just honest questions and grounded insights.
+        </p>
+
+        <div class="axes-preview" aria-label="What you'll explore">
+          <div class="axes-preview-item">
+            <div class="axis-color-dot" style="background: var(--axis1);"></div>
+            <span class="axes-preview-label" style="color:var(--axis1);">Locus</span>
+            <span class="axes-preview-value">Internal agency vs. external attribution</span>
+          </div>
+          <div class="axes-preview-item">
+            <div class="axis-color-dot" style="background: var(--amber);"></div>
+            <span class="axes-preview-label" style="color:var(--amber);">Orientation</span>
+            <span class="axes-preview-value">Contribution mindset vs. entitlement</span>
+          </div>
+          <div class="axes-preview-item">
+            <div class="axis-color-dot" style="background: var(--axis3);"></div>
+            <span class="axes-preview-label" style="color:var(--axis3);">Radius</span>
+            <span class="axes-preview-value">Self-centric vs. altrocentric concern</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="start-btn" aria-label="Begin reflection session">
+          Begin reflection →
+        </button>
+        <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:14px;">
+          ~4 questions · Fully deterministic · No data collected
+        </p>
+      </section>
+
+      <!-- ── Screen 2: Question ─────────────────────────────── -->
+      <section class="screen" id="question-screen" aria-label="Question">
+        <div class="question-axis-label" id="q-axis-label" aria-label="Current axis"></div>
+
+        <h2 class="question-text" id="question-text" aria-live="polite"></h2>
+
+        <div class="options-list" id="options-list" role="list" aria-label="Answer options"></div>
+      </section>
+
+      <!-- ── Screen 3: Reflection ───────────────────────────── -->
+      <section class="screen" id="reflection-screen" aria-label="Reflection insight">
+        <div class="reflection-header">
+          <div class="reflection-icon" aria-hidden="true">✦</div>
+          <span class="reflection-label">Reflection</span>
+        </div>
+        <div class="reflection-divider"></div>
+        <p class="reflection-text" id="reflection-text" aria-live="polite"></p>
+        <button class="btn-primary" id="continue-btn" aria-label="Continue to next section">
+          Continue →
+        </button>
+      </section>
+
+      <!-- ── Screen 4: Bridge ───────────────────────────────── -->
+      <section class="screen" id="bridge-screen" aria-label="Transition">
+        <div class="bridge-screen">
+          <div class="bridge-icon" aria-hidden="true">◦ ◦ ◦</div>
+          <p class="bridge-text" id="bridge-text" aria-live="polite"></p>
+          <div class="bridge-dots" aria-hidden="true">
+            <div class="bridge-dot lit"></div>
+            <div class="bridge-dot"></div>
+            <div class="bridge-dot"></div>
+          </div>
+          <button class="btn-primary" id="bridge-continue-btn" aria-label="Continue">
+            Continue →
+          </button>
+        </div>
+      </section>
+
+      <!-- ── Screen 5: Summary ──────────────────────────────── -->
+      <section class="screen" id="summary-screen" aria-label="Session summary">
+        <div class="summary-header">
+          <p class="summary-eyebrow">Your reflection</p>
+          <h2 class="summary-title">The shape of your day</h2>
+          <p class="summary-sub">Three axes. One honest snapshot.</p>
+        </div>
+
+        <div class="axis-result-cards" aria-label="Axis results">
+          <div class="axis-result-card" id="result-card-1">
+            <div class="axis-result-icon arc-1" aria-hidden="true">⚡</div>
+            <div class="axis-result-info">
+              <div class="axis-result-name">Locus of Control</div>
+              <div class="axis-result-value" id="result-axis1">—</div>
+            </div>
+            <span class="axis-result-badge badge-1">Axis I</span>
+          </div>
+
+          <div class="axis-result-card" id="result-card-2">
+            <div class="axis-result-icon arc-2" aria-hidden="true">🤝</div>
+            <div class="axis-result-info">
+              <div class="axis-result-name">Orientation</div>
+              <div class="axis-result-value" id="result-axis2">—</div>
+            </div>
+            <span class="axis-result-badge badge-2">Axis II</span>
+          </div>
+
+          <div class="axis-result-card" id="result-card-3">
+            <div class="axis-result-icon arc-3" aria-hidden="true">🌱</div>
+            <div class="axis-result-info">
+              <div class="axis-result-name">Radius of Concern</div>
+              <div class="axis-result-value" id="result-axis3">—</div>
+            </div>
+            <span class="axis-result-badge badge-3">Axis III</span>
+          </div>
+        </div>
+
+        <div class="summary-synthesis" id="summary-synthesis">
+          <p id="summary-synthesis-text"></p>
+        </div>
+
+        <button class="btn-primary" id="summary-end-btn" aria-label="Close session">
+          Close session →
+        </button>
+        <button class="btn-secondary" id="restart-btn" aria-label="Start over">
+          Start over
+        </button>
+      </section>
+
+      <!-- ── Screen 6: End ─────────────────────────────────── -->
+      <section class="screen" id="end-screen" aria-label="Session complete">
+        <div class="end-screen">
+          <div class="end-icon" aria-hidden="true">🌙</div>
+          <h2 class="end-title" id="end-text">Sleep well. You showed up.</h2>
+          <p class="end-subtitle">
+            Same answers will always produce the same reflection.
+            Every path is visible — no black box.
+          </p>
+          <p class="end-restart" id="new-session-btn" role="button" tabindex="0"
+             aria-label="Start a new session">
+            New session tomorrow →
+          </p>
+        </div>
+      </section>
+
+    </div><!-- /card -->
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="footer">
+      Daily Reflection Tree · DT Fellowship 2024 ·
+      <a href="https://github.com" aria-label="View source on GitHub">GitHub</a>
+    </footer>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
