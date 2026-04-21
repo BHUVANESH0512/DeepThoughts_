@@ -1,17 +1,25 @@
 {
   "metadata": {
     "title": "The Daily Reflection Tree",
-    "version": "1.0",
-    "description": "A deterministic reflection agent for end-of-day self-awareness. Three axes: Locus (agency), Orientation (contribution), Radius (concern for others).",
-    "axes": ["Axis 1: Locus (Internal vs External)", "Axis 2: Orientation (Contribution vs Entitlement)", "Axis 3: Radius (Self-centric vs Altrocentric)"],
-    "sources": ["Rotter (1954, 1966) - Locus of Control", "Dweck (2006) - Growth Mindset", "Campbell et al. (2004) - Psychological Entitlement", "Organ (1988) - Organizational Citizenship", "Maslow (1969) - Self-Transcendence", "Batson (2011) - Perspective-Taking"]
+    "version": "3.0",
+    "description": "A deterministic end-of-day reflection across 3 psychological axes.",
+    "axes": [
+      "Axis 1: Locus of Control (Internal vs External)",
+      "Axis 2: Orientation (Contribution vs Entitlement vs Neutral)",
+      "Axis 3: Radius of Concern (Self to Team to Others to Wide)"
+    ],
+    "nodeCount": 47,
+    "questionCount": 23,
+    "decisionCount": 7,
+    "reflectionCount": 9,
+    "bridgeCount": 5
   },
   "nodes": [
     {
       "id": "START",
       "parentId": null,
       "type": "start",
-      "text": "Good evening. Before you wind down, let's take 5 minutes to reflect on your day.",
+      "text": "Good evening. Let's take a moment to look at your day — not just what happened, but how you showed up.",
       "options": [],
       "target": "A1_OPEN",
       "signal": null
@@ -20,8 +28,8 @@
       "id": "A1_OPEN",
       "parentId": "START",
       "type": "question",
-      "text": "How would you sum up today in one word?",
-      "options": ["Overwhelming", "Productive", "Mixed", "Frustrating"],
+      "text": "How would you sum up your day in one word?",
+      "options": ["Productive", "Overwhelming", "Mixed", "Frustrating"],
       "target": null,
       "signal": null
     },
@@ -31,270 +39,425 @@
       "type": "decision",
       "text": "",
       "options": [
-        "answer=Productive:A1_Q_AGENCY_HIGH",
-        "answer=Mixed:A1_Q_AGENCY_MID",
-        "answer=Overwhelming|Frustrating:A1_Q_AGENCY_LOW"
+        "answer=Productive|Mixed:A1_Q1_HIGH",
+        "answer=Overwhelming|Frustrating:A1_Q1_LOW"
       ],
       "target": null,
       "signal": null
     },
     {
-      "id": "A1_Q_AGENCY_HIGH",
+      "id": "A1_Q1_HIGH",
       "parentId": "A1_D1",
       "type": "question",
-      "text": "You said today felt {A1_OPEN.answer}. When something went well, what was the main factor?",
-      "options": ["I was well-prepared", "My team delivered", "I adapted quickly to change", "Timing and luck aligned"],
+      "text": "You said \"{A1_OPEN.answer}\". What do you think made things go well?",
+      "options": ["My preparation", "Clear priorities", "Team support", "I adjusted as things changed"],
       "target": null,
       "signal": null
     },
     {
-      "id": "A1_Q_AGENCY_MID",
+      "id": "A1_Q1_LOW",
       "parentId": "A1_D1",
       "type": "question",
-      "text": "You said today felt {A1_OPEN.answer}. Looking back, what's one thing you directly influenced?",
-      "options": ["How I responded to setbacks", "What I asked for help with", "A conversation I initiated", "Something I didn't control—things just happened"],
+      "text": "You said \"{A1_OPEN.answer}\". When things got difficult, what was your first move?",
+      "options": ["Tried to control what I could", "Waited for direction", "Felt stuck", "Blamed the situation"],
       "target": null,
       "signal": null
     },
     {
-      "id": "A1_Q_AGENCY_LOW",
-      "parentId": "A1_D1",
-      "type": "question",
-      "text": "You said today felt {A1_OPEN.answer}. When things got difficult, what was your first move?",
-      "options": ["I figured out what I could control", "I vented or waited for clarity", "I pushed harder alone", "I felt stuck—not sure what to do"],
-      "target": null,
-      "signal": null
-    },
-    {
-      "id": "A1_SIGNAL_INT_HIGH",
-      "parentId": "A1_Q_AGENCY_HIGH",
+      "id": "A1_D2_HIGH",
+      "parentId": "A1_Q1_HIGH",
       "type": "decision",
       "text": "",
       "options": [
-        "answer=I was well-prepared|I adapted quickly to change:A1_R_INT_HIGH",
-        "answer=My team delivered|Timing and luck aligned:A1_R_INT_MID"
-      ],
-      "target": null,
-      "signal": "axis1:internal"
-    },
-    {
-      "id": "A1_R_INT_HIGH",
-      "parentId": "A1_SIGNAL_INT_HIGH",
-      "type": "reflection",
-      "text": "That's agency. You see the thread between what you did—prepared, adapted—and what happened. Not everything was in your control, but you were in the game.",
-      "options": [],
-      "target": "BRIDGE_1_2",
-      "signal": "axis1:internal"
-    },
-    {
-      "id": "A1_R_INT_MID",
-      "parentId": "A1_SIGNAL_INT_HIGH",
-      "type": "reflection",
-      "text": "You recognize both sides: your team's contribution and that things aligned for you today. That balance—seeing what others did and what you benefited from—is rare.",
-      "options": [],
-      "target": "BRIDGE_1_2",
-      "signal": "axis1:internal"
-    },
-    {
-      "id": "A1_SIGNAL_MID",
-      "parentId": "A1_Q_AGENCY_MID",
-      "type": "decision",
-      "text": "",
-      "options": [
-        "answer=How I responded to setbacks|A conversation I initiated:A1_R_MID_INT",
-        "answer=What I asked for help with:A1_R_MID_BALANCE",
-        "answer=Something I didn't control—things just happened:A1_R_MID_EXT"
+        "answer=My preparation|Clear priorities|I adjusted as things changed:A1_Q2_INTERNAL",
+        "answer=Team support:A1_Q2_MIXED"
       ],
       "target": null,
       "signal": null
     },
     {
-      "id": "A1_R_MID_INT",
-      "parentId": "A1_SIGNAL_MID",
-      "type": "reflection",
-      "text": "There it is. You own your reaction. You didn't just take what came—you shaped it, even in a day that felt mixed. That's the seed of agency.",
-      "options": [],
-      "target": "BRIDGE_1_2",
+      "id": "A1_D2_LOW",
+      "parentId": "A1_Q1_LOW",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=Tried to control what I could:A1_Q2_INTERNAL",
+        "answer=Waited for direction|Felt stuck|Blamed the situation:A1_Q2_EXTERNAL"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A1_Q2_INTERNAL",
+      "parentId": "A1_D2_HIGH",
+      "type": "question",
+      "text": "When something unexpected happened, how did you respond?",
+      "options": ["Took initiative quickly", "Adjusted plan calmly", "Asked for input then acted", "Stayed consistent"],
+      "target": "A1_Q3_INT",
       "signal": "axis1:internal"
     },
     {
-      "id": "A1_R_MID_BALANCE",
-      "parentId": "A1_SIGNAL_MID",
-      "type": "reflection",
-      "text": "Asking for help is a form of agency. You didn't pretend to have all the answers—you got what you needed. That's wisdom, not weakness.",
-      "options": [],
-      "target": "BRIDGE_1_2",
-      "signal": "axis1:internal"
+      "id": "A1_Q2_MIXED",
+      "parentId": "A1_D2_HIGH",
+      "type": "question",
+      "text": "How dependent was your progress on others today?",
+      "options": ["Mostly me", "Balanced effort", "Mostly others", "Couldn't move without others"],
+      "target": "A1_Q3_INT",
+      "signal": "axis1:mixed"
     },
     {
-      "id": "A1_R_MID_EXT",
-      "parentId": "A1_SIGNAL_MID",
-      "type": "reflection",
-      "text": "Some days feel more like drift than drive. But somewhere in that drift, you made a choice—if only how to feel about it. That counts.",
-      "options": [],
-      "target": "BRIDGE_1_2",
+      "id": "A1_Q2_EXTERNAL",
+      "parentId": "A1_D2_LOW",
+      "type": "question",
+      "text": "When facing a setback, what held you back most?",
+      "options": ["Lack of clarity", "Dependence on others", "Low energy", "Uncertainty"],
+      "target": "A1_Q3_EXT",
       "signal": "axis1:external"
     },
     {
-      "id": "A1_SIGNAL_LOW",
-      "parentId": "A1_Q_AGENCY_LOW",
-      "type": "decision",
-      "text": "",
-      "options": [
-        "answer=I figured out what I could control:A1_R_LOW_INT",
-        "answer=I vented or waited for clarity|I pushed harder alone:A1_R_LOW_EXT_ACTION",
-        "answer=I felt stuck—not sure what to do:A1_R_LOW_EXT"
-      ],
-      "target": null,
-      "signal": null
+      "id": "A1_Q3_INT",
+      "parentId": "A1_Q2_INTERNAL",
+      "type": "question",
+      "text": "Looking back, where did you have the most control?",
+      "options": ["My actions", "My mindset", "My decisions", "My preparation"],
+      "target": "A1_R_INT",
+      "signal": "axis1:internal"
     },
     {
-      "id": "A1_R_LOW_INT",
-      "parentId": "A1_SIGNAL_LOW",
+      "id": "A1_Q3_EXT",
+      "parentId": "A1_Q2_EXTERNAL",
+      "type": "question",
+      "text": "Looking back, was there a moment you could have acted differently?",
+      "options": ["Yes, small action possible", "Maybe, not sure", "No control at all", "Didn't think about it"],
+      "target": "A1_R_EXT",
+      "signal": "axis1:external"
+    },
+    {
+      "id": "A1_R_INT",
+      "parentId": "A1_Q3_INT",
       "type": "reflection",
-      "text": "Even when it feels rough, you have a practice: find the boundary between what's yours and what isn't, then move the needle on what's yours. That's grounded thinking.",
+      "text": "You consistently looked for what was within your control. That's not about perfection — it's about staying engaged with your role in outcomes.",
       "options": [],
       "target": "BRIDGE_1_2",
       "signal": "axis1:internal"
     },
     {
-      "id": "A1_R_LOW_EXT_ACTION",
-      "parentId": "A1_SIGNAL_LOW",
+      "id": "A1_R_EXT",
+      "parentId": "A1_Q3_EXT",
       "type": "reflection",
-      "text": "Venting, pushing—those are ways of coping when things are unclear. The real question for tomorrow: what's one thing you want to control differently?",
+      "text": "Some situations felt outside your control. Still, even small choices often exist — noticing them is where agency begins.",
       "options": [],
-      "target": "BRIDGE_1_2",
-      "signal": "axis1:external"
-    },
-    {
-      "id": "A1_R_LOW_EXT",
-      "parentId": "A1_SIGNAL_LOW",
-      "type": "reflection",
-      "text": "Stuck is a real feeling. But stuck isn't permanent. Tomorrow, when confusion hits, try this: name one small thing you can do. Not everything—just one.",
-      "options": [],
-      "target": "BRIDGE_1_2",
+      "target": "BRIDGE_1_2B",
       "signal": "axis1:external"
     },
     {
       "id": "BRIDGE_1_2",
-      "parentId": null,
+      "parentId": "A1_R_INT",
       "type": "bridge",
-      "text": "Now let's look at another layer: not just how you handled things, but what you gave today.",
+      "text": "Now let's shift the lens — from control to contribution.",
+      "options": [],
+      "target": "A2_OPEN",
+      "signal": null
+    },
+    {
+      "id": "BRIDGE_1_2B",
+      "parentId": "A1_R_EXT",
+      "type": "bridge",
+      "text": "Now let's shift the lens — from control to contribution.",
       "options": [],
       "target": "A2_OPEN",
       "signal": null
     },
     {
       "id": "A2_OPEN",
-      "parentId": "BRIDGE_1_2",
+      "parentId": null,
       "type": "question",
-      "text": "Think of a moment from today. Were you mostly focused on what you'd get, or what you could give?",
-      "options": ["I helped or taught someone", "I was focused on recognition or resources", "I was supporting the team without asking for credit", "I felt others weren't pulling their weight"],
+      "text": "Think of one interaction today. What were you focused on?",
+      "options": ["Helping someone", "Doing my work", "Getting recognition", "Noticing others' gaps"],
       "target": null,
       "signal": null
     },
     {
-      "id": "A2_SIGNAL",
+      "id": "A2_D1",
       "parentId": "A2_OPEN",
       "type": "decision",
       "text": "",
       "options": [
-        "answer=I helped or taught someone|I was supporting the team without asking for credit:A2_R_CONTRIB",
-        "answer=I was focused on recognition or resources|I felt others weren't pulling their weight:A2_R_ENTITLE"
+        "answer=Helping someone:A2_Q1_CONTRIB",
+        "answer=Doing my work:A2_Q1_NEUTRAL",
+        "answer=Getting recognition|Noticing others' gaps:A2_Q1_ENTITLE"
       ],
       "target": null,
       "signal": null
     },
     {
+      "id": "A2_Q1_CONTRIB",
+      "parentId": "A2_D1",
+      "type": "question",
+      "text": "What kind of contribution did you make?",
+      "options": ["Solved someone's problem", "Shared knowledge", "Took initiative", "Supported quietly"],
+      "target": null,
+      "signal": "axis2:contribution"
+    },
+    {
+      "id": "A2_Q1_NEUTRAL",
+      "parentId": "A2_D1",
+      "type": "question",
+      "text": "How would you describe your effort?",
+      "options": ["Met expectations", "Stayed consistent", "Avoided extra work", "Focused on own tasks"],
+      "target": "A2_R_NEUTRAL",
+      "signal": "axis2:neutral"
+    },
+    {
+      "id": "A2_Q1_ENTITLE",
+      "parentId": "A2_D1",
+      "type": "question",
+      "text": "What stood out most in your thinking?",
+      "options": ["I deserved more credit", "Others should improve", "I wasn't supported enough", "My effort wasn't seen"],
+      "target": null,
+      "signal": "axis2:entitlement"
+    },
+    {
+      "id": "A2_D2_CONTRIB",
+      "parentId": "A2_Q1_CONTRIB",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=Supported quietly:A2_Q2_DEEP",
+        "answer=Solved someone's problem|Shared knowledge|Took initiative:A2_Q2_ACTIVE"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A2_D2_ENTITLE",
+      "parentId": "A2_Q1_ENTITLE",
+      "type": "decision",
+      "text": "",
+      "options": [
+        "answer=I deserved more credit|My effort wasn't seen:A2_Q2_RECOG",
+        "answer=Others should improve|I wasn't supported enough:A2_Q2_BLAME"
+      ],
+      "target": null,
+      "signal": null
+    },
+    {
+      "id": "A2_Q2_ACTIVE",
+      "parentId": "A2_D2_CONTRIB",
+      "type": "question",
+      "text": "What motivated your action?",
+      "options": ["It felt right", "Team success mattered", "Habit", "Opportunity"],
+      "target": "A2_R_CONTRIB",
+      "signal": "axis2:contribution"
+    },
+    {
+      "id": "A2_Q2_DEEP",
+      "parentId": "A2_D2_CONTRIB",
+      "type": "question",
+      "text": "Why didn't you highlight your contribution?",
+      "options": ["Didn't feel necessary", "Didn't think about it", "Avoided attention", "Unsure of value"],
+      "target": "A2_R_CONTRIB",
+      "signal": "axis2:contribution"
+    },
+    {
+      "id": "A2_Q2_RECOG",
+      "parentId": "A2_D2_ENTITLE",
+      "type": "question",
+      "text": "What mattered most to you in that moment?",
+      "options": ["Being recognized", "Fairness", "Validation", "Outcome"],
+      "target": "A2_R_ENTITLE",
+      "signal": "axis2:entitlement"
+    },
+    {
+      "id": "A2_Q2_BLAME",
+      "parentId": "A2_D2_ENTITLE",
+      "type": "question",
+      "text": "What frustrated you most?",
+      "options": ["Others' effort", "Lack of support", "Misalignment", "Unclear roles"],
+      "target": "A2_R_ENTITLE",
+      "signal": "axis2:entitlement"
+    },
+    {
       "id": "A2_R_CONTRIB",
-      "parentId": "A2_SIGNAL",
+      "parentId": "A2_Q2_ACTIVE",
       "type": "reflection",
-      "text": "That's the posture of contribution. You're not keeping score, not waiting for your turn—you're giving first. Orgs run on that energy.",
+      "text": "You leaned toward contribution — acting beyond obligation. This builds trust even when it goes unnoticed.",
       "options": [],
       "target": "BRIDGE_2_3",
       "signal": "axis2:contribution"
     },
     {
-      "id": "A2_R_ENTITLE",
-      "parentId": "A2_SIGNAL",
+      "id": "A2_R_NEUTRAL",
+      "parentId": "A2_Q1_NEUTRAL",
       "type": "reflection",
-      "text": "When we focus on what we deserve, we stop seeing what we can offer. Notice the frame: less 'What's owed to me?' and more 'What can I add?' Small shift, big difference.",
+      "text": "You stayed within your lane. Stability matters, but growth often begins just beyond it.",
       "options": [],
-      "target": "BRIDGE_2_3",
+      "target": "BRIDGE_2_3B",
+      "signal": "axis2:neutral"
+    },
+    {
+      "id": "A2_R_ENTITLE",
+      "parentId": "A2_Q2_RECOG",
+      "type": "reflection",
+      "text": "It's natural to want fairness and recognition. Still, contribution tends to create the conditions for both.",
+      "options": [],
+      "target": "BRIDGE_2_3C",
       "signal": "axis2:entitlement"
     },
     {
       "id": "BRIDGE_2_3",
-      "parentId": null,
+      "parentId": "A2_R_CONTRIB",
       "type": "bridge",
-      "text": "One last piece: zoom out. Your day wasn't just about you.",
+      "text": "One last layer — zooming out beyond you.",
+      "options": [],
+      "target": "A3_OPEN",
+      "signal": null
+    },
+    {
+      "id": "BRIDGE_2_3B",
+      "parentId": "A2_R_NEUTRAL",
+      "type": "bridge",
+      "text": "One last layer — zooming out beyond you.",
+      "options": [],
+      "target": "A3_OPEN",
+      "signal": null
+    },
+    {
+      "id": "BRIDGE_2_3C",
+      "parentId": "A2_R_ENTITLE",
+      "type": "bridge",
+      "text": "One last layer — zooming out beyond you.",
       "options": [],
       "target": "A3_OPEN",
       "signal": null
     },
     {
       "id": "A3_OPEN",
-      "parentId": "BRIDGE_2_3",
+      "parentId": null,
       "type": "question",
-      "text": "When you think about today's biggest challenge or win, who comes to mind?",
-      "options": ["Just me—my own performance or problem", "My team—we were all navigating the same pressures", "A specific person who was struggling", "The customer or mission we're serving"],
+      "text": "When you think about today, who comes to mind first?",
+      "options": ["Just me", "My team", "A colleague", "The end user"],
       "target": null,
       "signal": null
     },
     {
-      "id": "A3_SIGNAL",
+      "id": "A3_D1",
       "parentId": "A3_OPEN",
       "type": "decision",
       "text": "",
       "options": [
-        "answer=Just me—my own performance or problem:A3_R_SELF_CENTRIC",
-        "answer=My team—we were all navigating the same pressures:A3_R_TEAM",
-        "answer=A specific person who was struggling|The customer or mission we're serving:A3_R_ALTROCENTRIC"
+        "answer=Just me:A3_Q1_SELF",
+        "answer=My team:A3_Q1_TEAM",
+        "answer=A colleague:A3_Q1_OTHER",
+        "answer=The end user:A3_Q1_WIDE"
       ],
       "target": null,
       "signal": null
     },
     {
-      "id": "A3_R_SELF_CENTRIC",
-      "parentId": "A3_SIGNAL",
+      "id": "A3_Q1_SELF",
+      "parentId": "A3_D1",
+      "type": "question",
+      "text": "What was your main focus?",
+      "options": ["My workload", "My stress", "My deadlines", "My performance"],
+      "target": "A3_Q2_SELF",
+      "signal": "axis3:self"
+    },
+    {
+      "id": "A3_Q1_TEAM",
+      "parentId": "A3_D1",
+      "type": "question",
+      "text": "How did your team shape your day?",
+      "options": ["Collaboration", "Shared stress", "Dependency", "Support"],
+      "target": "A3_R_TEAM",
+      "signal": "axis3:team"
+    },
+    {
+      "id": "A3_Q1_OTHER",
+      "parentId": "A3_D1",
+      "type": "question",
+      "text": "What stood out about others?",
+      "options": ["Someone struggled", "Someone needed help", "Someone succeeded", "Someone supported me"],
+      "target": "A3_R_OTHERS",
+      "signal": "axis3:others"
+    },
+    {
+      "id": "A3_Q1_WIDE",
+      "parentId": "A3_D1",
+      "type": "question",
+      "text": "How did your work connect to a larger outcome?",
+      "options": ["Customer value", "Team success", "Long-term impact", "Problem solved"],
+      "target": "A3_Q2_WIDE",
+      "signal": "axis3:wide"
+    },
+    {
+      "id": "A3_Q2_SELF",
+      "parentId": "A3_Q1_SELF",
+      "type": "question",
+      "text": "Did you consider how your actions affected others?",
+      "options": ["Not really", "A little", "Sometimes", "Often"],
+      "target": "A3_R_SELF",
+      "signal": "axis3:self"
+    },
+    {
+      "id": "A3_Q2_WIDE",
+      "parentId": "A3_Q1_WIDE",
+      "type": "question",
+      "text": "Did this perspective influence your actions?",
+      "options": ["Yes clearly", "Somewhat", "Not much", "Not at all"],
+      "target": "A3_R_WIDE",
+      "signal": "axis3:wide"
+    },
+    {
+      "id": "A3_R_SELF",
+      "parentId": "A3_Q2_SELF",
       "type": "reflection",
-      "text": "It's natural for your mind to center on your own stakes, your own stress. But try this: is there anyone your day affected? Even indirectly? Noticing that connection is the beginning of perspective.",
+      "text": "Your focus stayed close to your own experience. Expanding that lens can often reduce pressure and bring clarity.",
       "options": [],
-      "target": "SUMMARY_CALC",
-      "signal": "axis3:self_centric"
+      "target": "SUMMARY",
+      "signal": "axis3:self"
     },
     {
       "id": "A3_R_TEAM",
-      "parentId": "A3_SIGNAL",
+      "parentId": "A3_Q1_TEAM",
       "type": "reflection",
-      "text": "You're already thinking in we. That's not naive—that's how meaningful work feels. Your struggle is part of something shared.",
+      "text": "You saw your day through the team. Shared context often brings better decisions.",
       "options": [],
-      "target": "SUMMARY_CALC",
-      "signal": "axis3:transcendent"
+      "target": "SUMMARY",
+      "signal": "axis3:team"
     },
     {
-      "id": "A3_R_ALTROCENTRIC",
-      "parentId": "A3_SIGNAL",
+      "id": "A3_R_OTHERS",
+      "parentId": "A3_Q1_OTHER",
       "type": "reflection",
-      "text": "You're thinking about someone else's experience, not just yours. That kind of perspective—imagining what it felt like for them—is where empathy lives, and where meaning grows.",
+      "text": "You noticed others — that awareness is where stronger collaboration begins.",
       "options": [],
-      "target": "SUMMARY_CALC",
-      "signal": "axis3:transcendent"
+      "target": "SUMMARY",
+      "signal": "axis3:others"
     },
     {
-      "id": "SUMMARY_CALC",
+      "id": "A3_R_WIDE",
+      "parentId": "A3_Q2_WIDE",
+      "type": "reflection",
+      "text": "You connected your work to something larger. That's where meaning tends to grow.",
+      "options": [],
+      "target": "SUMMARY",
+      "signal": "axis3:wide"
+    },
+    {
+      "id": "SUMMARY",
       "parentId": null,
       "type": "summary",
-      "text": "Today you leaned {axis1.dominant} on agency. You approached contribution with a {axis2.dominant} mindset. And your attention spanned from {axis3.dominant} concerns. That's the shape of your day.",
+      "text": "Today you leaned {axis1.dominant} in ownership, {axis2.dominant} in contribution, and {axis3.dominant} in perspective. Notice one small shift for tomorrow.",
       "options": [],
       "target": "END",
       "signal": null
     },
     {
       "id": "END",
-      "parentId": "SUMMARY_CALC",
+      "parentId": "SUMMARY",
       "type": "end",
-      "text": "Sleep well. You showed up.",
+      "text": "That's your reflection for today. See you tomorrow.",
       "options": [],
       "target": null,
       "signal": null
